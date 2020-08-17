@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/post/main",
+    "pages/detail/main",
+    "pages/time/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#88CCD7",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#ccc",
+    "selectedColor": "#ED758D",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+
+    "list": [{
+      "text": "日记",
+      "pagePath": "pages/index/main",
+      "iconPath": "static/images/diary.png",
+      "selectedIconPath": "static/images/diary-active.png"
+    }, {
+      "text": "足迹",
+      "pagePath": "pages/time/main",
+      "iconPath": "static/images/time.png",
+      "selectedIconPath": "static/images/time-active.png"
+    }],
+    "position": "bottom"
+  },
+  "requiredBackgroundModes": ["audio"],
+  "cloud": true,
+  "plugins": {
+    "calendar": {
+      "version": "1.1.3",
+      "provider": "wx92c68dae5a8bb046"
+    }
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "根据用户当前位置获取实时天气信息"
+    }
+  }
+}

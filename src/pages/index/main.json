@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "兜兜日记",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "calendar": "plugin://calendar/calendar"
+  }
+}
