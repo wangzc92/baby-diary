@@ -51,6 +51,8 @@
         v-for="(item, index) in dayList"
         :key="index"
         :item="item"
+        @detail="goDetailPage"
+        @star="toggleStar"
       )
 </template>
 
@@ -102,11 +104,11 @@ export default {
     // this.setCalendarStyle()
     this.audioCtx = wx.createAudioContext('myAudio')
     this.getOpenId()
+    this.getDiaryList()
     this.getWeather()
   },
   onShow () {
     // const that = this
-    this.getDiaryList()
     this.isPlay = true
     this.getMusicUrl()
   },
@@ -240,6 +242,24 @@ export default {
         return this.day === new Date(item.date).getDate()
       })
       this.loading = false
+    },
+    toggleStar (params) {
+      const that = this
+      // 她的id和我的id
+      if (that.openId === 'oAihM5PabAaZdAHOd2eBFuZdL73s' || that.openId === 'oAihM5MILq8bNCYSKe22PTTgaXl4') {
+        that.loading = true
+        wx.cloud.callFunction({
+          name: 'star',
+          data: params
+        }).then(res => {
+          this.getDiaryList()
+        })
+      }
+    },
+    goDetailPage (obj) {
+      wx.navigateTo({
+        url: '/pages/detail/main?name=' + obj.name + '&url=' + obj.url + '&title=' + obj.title + '&desc=' + obj.desc + '&address=' + obj.address + '&star=' + obj.star + '&id=' + obj._id
+      })
     },
     goPostPage () {
       const that = this

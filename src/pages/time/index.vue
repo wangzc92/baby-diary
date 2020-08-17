@@ -47,7 +47,7 @@ export default {
         }
       }).then(res => {
         that.diaryList = res.result.data.map(item => {
-          item.time = tools.formatDate(item.date)
+          item.time = tools.formatDay(item.date)
           return item
         })
         that.loading = false

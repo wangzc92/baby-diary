@@ -5,10 +5,12 @@
     image.like(
       v-if="item.star"
       src="../../static/images/like_active.png"
+      @tap.stop="handleStar(false)"
     )
     image.like(
       v-else
       src="../../static/images/like.png"
+      @tap.stop="handleStar(true)"
     )
     image.img(
       :src="item.url"
@@ -41,9 +43,14 @@ export default {
   },
   methods: {
     goDetailPage (obj) {
-      wx.navigateTo({
-        url: '/pages/detail/main?name=' + obj.name + '&url=' + obj.url + '&title=' + obj.title + '&desc=' + obj.desc + '&address=' + obj.address + '&star=' + obj.star + '&id=' + obj._id
-      })
+      this.$emit('detail', obj)
+    },
+    handleStar (val) {
+      let params = {
+        id: this.item._id,
+        star: val
+      }
+      this.$emit('star', params)
     }
   }
 }

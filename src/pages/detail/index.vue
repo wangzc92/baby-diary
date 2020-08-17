@@ -14,12 +14,10 @@
         image(
           v-if="star"
           src="../../static/images/like_active.png"
-          @tap.stop="toggleStar(false)"
         )
         image(
           v-else
           src="../../static/images/like.png"
-          @tap.stop="toggleStar(true)"
         )
     p.title {{ title }}
     p.desc {{ desc }}
@@ -30,12 +28,10 @@
 
 <script>
 import Loading from 'components/loading'
-import tools from 'common/js/tools'
 export default {
   name: 'Detail',
   data () {
     return {
-      openId: '',
       id: '',
       url: '',
       address: '',
@@ -52,7 +48,6 @@ export default {
   },
   onLoad (e) {
     const that = this
-    that.getOpenId()
     that.id = e.id
     that.name = e.name
     wx.setNavigationBarTitle({
@@ -89,35 +84,6 @@ export default {
     that.star = ''
   },
   methods: {
-    getOpenId () {
-      const that = this
-      wx.cloud.callFunction({
-        name: 'user',
-        data: {}
-      }).then(res => {
-        that.openId = res.result.openid
-      })
-    },
-    toggleStar (value) {
-      const that = this
-      // 她的id和我的id
-      if (that.openId === 'oAihM5PabAaZdAHOd2eBFuZdL73s' || that.openId === 'oAihM5MILq8bNCYSKe22PTTgaXl4') {
-        wx.cloud.callFunction({
-          name: 'star',
-          data: {
-            id: that.id,
-            star: value
-          }
-        }).then(res => {
-          if (value) {
-            tools.showToast('收藏成功~')
-          } else {
-            tools.showToast('取消收藏成功')
-          }
-          this.star = value
-        })
-      }
-    },
     lookImage (img) {
       wx.previewImage({
         current: img, // 当前显示图片的http链接

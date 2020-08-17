@@ -6,7 +6,8 @@
       @tap="goDetailPage(item)"
     )
       .item-index {{ item.time }}
-      .item-content {{ item.title }}
+      .item-title {{ item.title }}
+      .item-desc {{ item.desc }}
     .item
       .item-index 到底了~
 </template>
@@ -37,7 +38,7 @@ export default {
       width calc(100% - 50px)
       height auto
       position relative
-      margin-bottom 20px
+      margin-bottom 40px
       &:before
         content ''
         width 12px
@@ -49,7 +50,7 @@ export default {
       &:after
         content ''
         width 3px
-        height calc(100% + 20px)
+        height calc(100% + 40px)
         background-color #91c2fc
         position absolute
         top 0
@@ -59,12 +60,24 @@ export default {
         font-size 12px
         position relative
         color #656565
-      &-content
+      &-title
+        line-height 60rpx
+        height 60rpx
+        color #333
         width 100%
-        height auto
-        position relative
-        white-space pre-wrap
         word-wrap break-word
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+        font-size 30rpx
+      &-desc
+        color #666
+        width 100%
+        word-wrap break-word
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+        font-size 26rpx
       &:last-of-type:after
         display none
 </style>

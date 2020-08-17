@@ -25,6 +25,7 @@
       v-if="getSrcFlag"
       class="title"
       placeholder="标题"
+      cursor-spacing="140"
       placeholder-style="color:#ccc;"
       v-model="title"
     )
@@ -35,6 +36,7 @@
       placeholder="想要跟我说什么，我都乖乖听着呢"
       name="textarea"
       placeholder-style="color:#ccc;"
+      cursor-spacing="140"
       v-model="desc"
     )
     .save(@tap="save")
