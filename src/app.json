@@ -3,7 +3,8 @@
     "pages/index/main",
     "pages/post/main",
     "pages/detail/main",
-    "pages/time/main"
+    "pages/time/main",
+    "pages/count/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -26,6 +27,11 @@
       "pagePath": "pages/time/main",
       "iconPath": "static/images/time.png",
       "selectedIconPath": "static/images/time-active.png"
+    }, {
+      "text": "时光",
+      "pagePath": "pages/count/main",
+      "iconPath": "static/images/count.png",
+      "selectedIconPath": "static/images/count-active.png"
     }],
     "position": "bottom"
   },
