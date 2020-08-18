@@ -9,12 +9,6 @@
         src="../../static/images/music_play.png"
         :class="isPlay ? 'puaseImg' : 'playImg'"
       )
-    audio(
-      id="myAudio"
-      :src="audioUrl"
-      autoplay
-      loop
-    )
     .calendar-box
       .left
         .circle
@@ -72,8 +66,6 @@ export default {
   data () {
     return {
       isPlay: true,
-      audioCtx: '',
-      audioUrl: '',
       openId: '',
       days_count: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate(),
       daysColor: [],
@@ -90,8 +82,8 @@ export default {
       haveDiaryList: [],
       isShowPost: false,
       loading: true,
-      userInfo: null,
-      tempObj: null
+      bgMusic: null,
+      musicUrl: ''
     }
   },
   computed: {
@@ -101,8 +93,7 @@ export default {
   },
   onLoad () {
     wx.showNavigationBarLoading()
-    // this.setCalendarStyle()
-    this.audioCtx = wx.createAudioContext('myAudio')
+    this.bgMusic = wx.getBackgroundAudioManager()
     this.getOpenId()
     this.getDiaryList()
     this.getWeather()
@@ -112,15 +103,18 @@ export default {
     this.isPlay = true
     this.getMusicUrl()
   },
+  onUnload () {
+    this.bgMusic.stop()
+  },
   methods: {
     audioPlay () {
       const that = this
       if (that.isPlay) {
-        that.audioCtx.pause()
+        that.bgMusic.pause()
         that.isPlay = !that.isPlay
         tools.showToast('您已暂停音乐播放~')
       } else {
-        that.audioCtx.play()
+        that.bgMusic.play()
         that.isPlay = !that.isPlay
         tools.showToast('背景音乐已开启~')
       }
@@ -132,10 +126,18 @@ export default {
         name: 'music',
         data: {}
       }).then(res => {
-        that.audioUrl = (res.result.data[0] || {}).musicUrl
-        that.audioCtx.loop = true
-        that.audioCtx.play()
+        that.musicUrl = (res.result.data[0] || {}).musicUrl
+        that.playMusic()
       })
+    },
+    playMusic () {
+      const that = this
+      that.bgMusic.title = '背景音乐'
+      that.bgMusic.src = that.musicUrl
+      that.bgMusic.onEnded(() => {
+        that.playMusic()
+      })
+      that.bgMusic.play()
     },
     getOpenId () {
       const that = this
@@ -319,8 +321,6 @@ export default {
       animation musicStop 1s linear forwards
     .pauseImg
       animation musicStart 1s linear forwards
-  #myAudio
-    display none
   .calendar-box
     display flex
     justify-content space-around
