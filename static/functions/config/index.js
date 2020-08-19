@@ -5,7 +5,7 @@ cloud.init({
 const db = cloud.database()
 exports.main = async (event, context) => {
   try {
-    return await db.collection('music').get()
+    return await db.collection('config').get()
   } catch (e) {
     console.error(e)
   }

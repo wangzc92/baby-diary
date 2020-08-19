@@ -83,6 +83,7 @@ export default {
       isShowPost: false,
       loading: true,
       bgMusic: null,
+      musicTitle: '',
       musicUrl: ''
     }
   },
@@ -97,16 +98,33 @@ export default {
     this.getOpenId()
     this.getDiaryList()
     this.getWeather()
+    this.getRandomMusic()
   },
   onShow () {
-    // const that = this
-    this.isPlay = true
-    this.getMusicUrl()
   },
   onUnload () {
     this.bgMusic.stop()
   },
   methods: {
+    getRandomMusic () {
+      const that = this
+      wx.request({
+        url: 'https://api.uomg.com/api/rand.music',
+        methods: 'POST',
+        header: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          sort: '热歌榜',
+          format: 'json'
+        },
+        success: function (res) {
+          that.musicUrl = (res.data.data || {}).url
+          that.musicTitle = (res.data.data || {}).name
+          that.playMusic()
+        }
+      })
+    },
     audioPlay () {
       const that = this
       if (that.isPlay) {
@@ -119,23 +137,12 @@ export default {
         tools.showToast('背景音乐已开启~')
       }
     },
-
-    getMusicUrl () {
-      const that = this
-      wx.cloud.callFunction({
-        name: 'music',
-        data: {}
-      }).then(res => {
-        that.musicUrl = (res.result.data[0] || {}).musicUrl
-        that.playMusic()
-      })
-    },
     playMusic () {
       const that = this
-      that.bgMusic.title = '背景音乐'
+      that.bgMusic.title = that.musicTitle
       that.bgMusic.src = that.musicUrl
       that.bgMusic.onEnded(() => {
-        that.playMusic()
+        that.getRandomMusic()
       })
       that.bgMusic.play()
     },

@@ -1,8 +1,10 @@
 <template lang="pug">
   .count
+    loading(v-if="loading")
+    .count-bg(:style="{'background-image': 'url(' + bgUrl + ')'}")
     .count-text
       img(
-        src="http://wangzc.cc/baby-diary/images/text.png"
+        :src="textUrl"
       )
     .count-box
       .tiles
@@ -21,48 +23,81 @@
 
 <script>
 import tools from 'common/js/tools'
+import Loading from 'components/loading'
 export default {
   name: 'Time',
   components: {
+    Loading
   },
   data () {
     return {
-      birthday: '2020-01-01 8:00',
+      birthday: '',
+      bgUrl: '',
+      textUrl: '',
       days: 0,
       hours: 0,
       mins: 0,
       secs: 0,
-      timer: null
+      timer: null,
+      loading: false
     }
   },
   computed: {
   },
   onLoad (e) {
+    const that = this
+    that.getConfig()
   },
   onShow () {
     const that = this
-    let newList = tools.getTimer(that.birthday)
-    that.change('days', newList[0], 12)
-    setTimeout(() => {
-      that.change('hours', newList[1], 4)
-    }, 400)
-    setTimeout(() => {
-      that.change('mins', newList[2], 4)
-    }, 600)
-    setTimeout(() => {
-      that.change('secs', newList[3], 4)
-    }, 800)
-    setTimeout(() => {
-      that.loop()
-    }, 1000)
+    if (that.birthday) {
+      that.getDays()
+    }
   },
   onHide () {
     const that = this
-    clearInterval(that.timer)
+    if (that.timer) {
+      clearTimeout(that.timer)
+    }
   },
   onUnload () {
+    const that = this
+    if (that.timer) {
+      clearTimeout(that.timer)
+    }
   },
   methods: {
+    getConfig () {
+      const that = this
+      wx.cloud.callFunction({
+        name: 'config',
+        data: {}
+      }).then(res => {
+        that.loading = false
+        let result = res.result.data[0] || {}
+        that.birthday = result.birthday
+        that.bgUrl = result.bgUrl
+        that.textUrl = result.textUrl
+        that.getDays()
+      })
+    },
+    getDays () {
+      const that = this
+      let newList = tools.getTimer(that.birthday)
+      that.change('days', newList[0], 12)
+      setTimeout(() => {
+        that.change('hours', newList[1], 4)
+      }, 400)
+      setTimeout(() => {
+        that.change('mins', newList[2], 4)
+      }, 600)
+      setTimeout(() => {
+        that.change('secs', newList[3], 4)
+      }, 800)
+      setTimeout(() => {
+        that.loop()
+      }, 1000)
+    },
     change (key, newNumber, setTime) {
       const that = this
       var baseNumber = 0 // 原数字
@@ -87,13 +122,12 @@ export default {
     },
     loop () {
       const that = this
-      that.timer = setInterval(() => {
-        let timeList = tools.getTimer(that.birthday)
-        that.days = timeList[0]
-        that.hours = timeList[1]
-        that.mins = timeList[2]
-        that.secs = timeList[3]
-      }, 1000)
+      let timeList = tools.getTimer(that.birthday)
+      that.days = timeList[0]
+      that.hours = timeList[1]
+      that.mins = timeList[2]
+      that.secs = timeList[3]
+      that.timer = setTimeout(that.loop, 1000)
     }
   }
 }
@@ -103,15 +137,25 @@ export default {
 .count
   width 100%
   height 100vh
-  background url('http://wangzc.cc/baby-diary/images/bg.jpg') center
-  background-size cover
   position relative
+  .loading
+    min-height 100vh
+  &-bg
+    width 100%
+    height 100vh
+    position absolute
+    top 0
+    left 0
+    background-position center
+    background-size cover
+    z-index 1
   &-text
     width 60px
     position absolute
     right 20px
     top 90px
     background rgba(255, 255, 255, 0.4)
+    z-index 2
     img
       width 100%
   &-box
@@ -120,6 +164,7 @@ export default {
     position absolute
     left 4%
     bottom 12%
+    z-index 3
     display flex
     justify-content space-around
     align-items center

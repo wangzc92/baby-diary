@@ -1,6 +1,6 @@
 <template lang="pug">
   .time
-    Loading(v-if="loading")
+    loading(v-if="loading")
     Nodata(v-else-if="nodata")
     .time-content(v-else)
       time-line(:items="diaryList")
@@ -20,7 +20,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       diaryList: []
     }
   },
