@@ -10,6 +10,8 @@
       .city
         image(class="icon" src="../../static/images/position.png")
         span.address {{ address }}
+        image(class="icon icont" src="../../static/images/date.png")
+        span.time(@tap="toggleTime") {{ time }}
       .like
         image(
           v-if="star"
@@ -60,7 +62,15 @@ export default {
       title: '',
       desc: '',
       weather: '',
-      star: false
+      star: false,
+      selectTime: '',
+      nowTime: tools.formatDay(new Date().getTime()),
+      useSelect: true
+    }
+  },
+  computed: {
+    time () {
+      return this.useSelect ? this.selectTime : this.nowTime
     }
   },
   components: {
@@ -71,6 +81,7 @@ export default {
     that.address = e.address
     that.openId = e.openId
     that.weather = e.weather
+    that.selectTime = e.selectTime
     if (that.openId === 'oAihM5MILq8bNCYSKe22PTTgaXl4') {
       that.name = '云妈'
     }
@@ -83,11 +94,15 @@ export default {
     that.getSrcFlag = true
     that.title = ''
     that.desc = ''
+    that.selectTime = ''
     that.imgUrl = '../../static/images/default-add.jpg'
   },
   methods: {
     toggleStar (value) {
       this.star = value
+    },
+    toggleTime () {
+      this.useSelect = !this.useSelect
     },
     upload () {
       const that = this
@@ -132,7 +147,7 @@ export default {
             title: that.title,
             desc: that.desc,
             star: that.star,
-            date: new Date().getTime(),
+            date: that.useSelect ? new Date(that.selectTime).getTime() : new Date().getTime(),
             url: that.imgUrl,
             name: that.name,
             weather: that.weather,
@@ -180,7 +195,7 @@ export default {
     justify-content space-between
     align-items center
     .city
-      flex 1
+      flex 2
       display flex
       justify-content flex-start
       align-items center
@@ -191,8 +206,13 @@ export default {
       .address
         font-size 24rpx
         color #666
+      .icon.icont
+        margin-left 30rpx
+      .time
+        font-size 24rpx
+        color #666
     .like
-      flex 2
+      flex 1
       text-align right
       image
         height 36rpx

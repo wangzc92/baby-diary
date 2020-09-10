@@ -43,7 +43,11 @@ export default {
   },
   methods: {
     goDetailPage (obj) {
-      this.$emit('detail', obj)
+      let temp = {
+        ...obj,
+        time: tools.formatDate(obj.date)
+      }
+      this.$emit('detail', temp)
     },
     handleStar (val) {
       let params = {

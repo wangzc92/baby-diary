@@ -67,7 +67,6 @@ export default {
     return {
       isPlay: true,
       openId: '',
-      days_count: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate(),
       daysColor: [],
       showHeader: true,
       year: new Date().getFullYear(),
@@ -88,6 +87,9 @@ export default {
     }
   },
   computed: {
+    daysCount () {
+      return new Date(this.year, this.month, 0).getDate()
+    },
     nodata () {
       return this.dayList.length === 0
     }
@@ -160,7 +162,7 @@ export default {
       })
     },
     setCalendarStyle () {
-      for (let i = 1; i <= this.days_count; i++) {
+      for (let i = 1; i <= this.daysCount; i++) {
         if (i === this.day) {
           this.daysColor.push({
             month: 'current', day: i, color: 'white', background: '#C44F95'
@@ -267,17 +269,16 @@ export default {
     },
     goDetailPage (obj) {
       wx.navigateTo({
-        url: '/pages/detail/main?name=' + obj.name + '&url=' + obj.url + '&title=' + obj.title + '&desc=' + obj.desc + '&address=' + obj.address + '&star=' + obj.star + '&id=' + obj._id
+        url: '/pages/detail/main?name=' + obj.name + '&url=' + obj.url + '&title=' + obj.title + '&desc=' + obj.desc + '&address=' + obj.address + '&star=' + obj.star + '&id=' + obj._id + '&time=' + obj.time
       })
     },
     goPostPage () {
       const that = this
+      let tempTime = that.year + '-' + that.month + '-' + that.day
+      let selectTime = tools.formatDay(new Date(tempTime).getTime())
       wx.navigateTo({
-        url: '/pages/post/main?address=' + that.address + '&openId=' + that.openId + '&weather=' + that.weather
+        url: '/pages/post/main?address=' + that.address + '&openId=' + that.openId + '&weather=' + that.weather + '&selectTime=' + selectTime
       })
-    },
-    getTime (date) {
-      return tools.formatTime(date)
     }
   },
 

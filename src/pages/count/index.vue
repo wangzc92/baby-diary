@@ -39,7 +39,7 @@ export default {
       mins: 0,
       secs: 0,
       timer: null,
-      loading: false
+      loading: true
     }
   },
   computed: {

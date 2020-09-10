@@ -8,15 +8,10 @@ const _ = db.command
 exports.main = async (event, context) => {
   let params = {}
   if (event.type === 'oneMonth') {
-    let min = new Date(`${event.year}-${event.month}`).getTime()
-    let max
-    if (event.month == 12) {
-      max = new Date(`${event.year + 1}-01`).getTime()
-    } else {
-      max = new Date(`${event.year}-${event.month + 1}`).getTime()
-    }
+    let min = new Date(event.year, event.month - 1).getTime() - 8*24*60*1000
+    let max = new Date(event.year, event.month).getTime() - 8*24*60*1000
     params = {
-      date: _.and(_.gt(min), _.lt(max))
+      date: _.and(_.gte(min), _.lt(max))
     }
   } else {
     params = {

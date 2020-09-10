@@ -22,6 +22,7 @@
     p.title {{ title }}
     p.desc {{ desc }}
     p.name 爱你的{{ name }}
+    p.time {{ time }}
     .loading-container(v-if="getSrcFlag")
       loading
 </template>
@@ -40,6 +41,7 @@ export default {
       title: '',
       desc: '',
       weather: '',
+      time: '',
       star: false
     }
   },
@@ -58,6 +60,7 @@ export default {
     that.desc = e.desc
     that.address = e.address
     that.star = e.star === 'true'
+    that.time = e.time
     that.timer = setTimeout(() => {
       that.getSrcFlag = false
       wx.setNavigationBarColor({
@@ -82,6 +85,7 @@ export default {
     that.timer = null
     that.address = ''
     that.star = ''
+    that.time = ''
   },
   methods: {
     lookImage (img) {
@@ -164,7 +168,12 @@ export default {
     margin-bottom 200rpx
   .name
     text-align center
+    color #666
+    margin-bottom 10rpx
+    font-size 24rpx
+  .time
+    text-align center
     color #999
     margin-bottom 100rpx
-    font-size 24rpx
+    font-size 22rpx
 </style>
